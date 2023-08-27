@@ -7,6 +7,7 @@ Created on Sat Aug 26 12:00:49 2023
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import dill
 u_L = cv2.imread('image_L.jpg',cv2.IMREAD_GRAYSCALE)
 u_R = cv2.imread('image_R.jpg',cv2.IMREAD_GRAYSCALE)
 
@@ -14,16 +15,13 @@ u_L=u_L*1.
 u_R=u_R*1.
 
 
-u_L=u_L[1200:2000,500:2500]
-u_R=u_R[1200:2000,500:2500]
-
 
 plt.subplot(1,2,1)
 plt.imshow(u_L, cmap='gray')
 plt.subplot(1,2,2)
 plt.imshow(u_R, cmap='gray')
 
-taille_fenetre=20
+taille_fenetre=100
 
 NX=np.shape(u_L)[1]
 NY=np.shape(u_L)[0]
@@ -32,6 +30,10 @@ def Pi_produit(u,v):
     les_correlation=np.array([np.correlate(u[kk], v[kk],mode='valid') for kk in range(taille_fenetre)])
     return np.sum(les_correlation,axis=0 )
 
+
+
+
+pas_decimation=10
 
 delta=np.zeros((NY-taille_fenetre,NX-taille_fenetre))
 
@@ -63,7 +65,6 @@ U, V = np.meshgrid(range(np.shape(delta)[1]),range(np.shape(delta)[0]))
 
 
 
-from mpl_toolkits.mplot3d import Axes3D
 
 def plot_surface(X, Y, Z):
     fig = plt.figure()
@@ -85,6 +86,7 @@ delta_decim=delta[::10,::10]
 uu=u_R[0:(NY-taille_fenetre),0:(NX-taille_fenetre)]
 
 
-
+with open('resultat100.pkl', 'wb') as file:
+    dill.dump_session(file)
 
 
