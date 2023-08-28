@@ -107,3 +107,4 @@ plt.figure()
 
 plt.imshow(delta[::pas_decimation,::pas_decimation])
 
+plt.imshow(delta_decim,vmax=1000)
