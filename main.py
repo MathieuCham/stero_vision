@@ -21,7 +21,7 @@ plt.imshow(u_L, cmap='gray')
 plt.subplot(1,2,2)
 plt.imshow(u_R, cmap='gray')
 
-taille_fenetre=100
+taille_fenetre=50
 
 NX=np.shape(u_L)[1]
 NY=np.shape(u_L)[0]
@@ -37,8 +37,8 @@ pas_decimation=10
 
 delta=np.zeros((NY-taille_fenetre,NX-taille_fenetre))
 
-I_recherche=range(0,NY-taille_fenetre,10)
-J_recherche=range(0,NX-taille_fenetre,10)
+I_recherche=range(0,NY-taille_fenetre,pas_decimation)
+J_recherche=range(0,NX-taille_fenetre,pas_decimation)
 
 
 
@@ -78,15 +78,15 @@ def plot_surface(X, Y, Z):
     plt.show()
 
 
-U_decim=U[::10,::10]
-V_decim=V[::10,::10]
-delta_decim=delta[::10,::10]
+U_decim=U[::pas_decimation,::pas_decimation]
+V_decim=V[::pas_decimation,::pas_decimation]
+delta_decim=delta[::pas_decimation,::pas_decimation]
 
 
 uu=u_R[0:(NY-taille_fenetre),0:(NX-taille_fenetre)]
 
 
-with open('resultat100.pkl', 'wb') as file:
-    dill.dump_session(file)
+# with open('fenetre10.pkl', 'wb') as file:
+#     dill.dump_session(file)
 
 
