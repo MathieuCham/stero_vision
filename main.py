@@ -8,11 +8,16 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import dill
-u_L = cv2.imread('image_L.jpg',cv2.IMREAD_GRAYSCALE)
-u_R = cv2.imread('image_R.jpg',cv2.IMREAD_GRAYSCALE)
+u_L = cv2.imread('image_L.png',cv2.IMREAD_GRAYSCALE)
+u_R = cv2.imread('image_R.png',cv2.IMREAD_GRAYSCALE)
 
-u_L=u_L*1.
-u_R=u_R*1.
+u_L=u_L*1.+1
+u_R=u_R*1.+1
+#u_L=np.roll(u_R,axis=1,shift=100)
+
+
+u_L=u_L[0:1000,:]
+u_R=u_R[0:1000,:]
 
 
 
@@ -21,7 +26,7 @@ plt.imshow(u_L, cmap='gray')
 plt.subplot(1,2,2)
 plt.imshow(u_R, cmap='gray')
 
-taille_fenetre=50
+taille_fenetre=30
 
 NX=np.shape(u_L)[1]
 NY=np.shape(u_L)[0]
@@ -33,7 +38,7 @@ def Pi_produit(u,v):
 
 
 
-pas_decimation=10
+pas_decimation=4
 
 delta=np.zeros((NY-taille_fenetre,NX-taille_fenetre))
 
@@ -51,13 +56,18 @@ for ii in I_recherche:
     bande_gauche_carre= np.array([[x ** 2 for x in row] for row in bande_gauche])
     
     for jj in J_recherche:
+
         
         petite_image_droite=u_R[ii:(ii+taille_fenetre),jj:(jj+taille_fenetre)]
-        
+        if(np.max(petite_image_droite)>10):   
+            
+            bg=bande_gauche
+            bd=petite_image_droite
+            II=ii
+            JJ=jj
+            correlation_croise=Pi_produit(bande_gauche, petite_image_droite)/np.sqrt(Pi_produit(bande_gauche_carre, masque_de_1))/np.linalg.norm(petite_image_droite)
     
-        correlation_croise=Pi_produit(bande_gauche, petite_image_droite)/np.sqrt(Pi_produit(bande_gauche_carre, masque_de_1))/np.linalg.norm(petite_image_droite)
-    
-        delta[ii,jj]=np.argmax(correlation_croise[jj:])
+            delta[ii,jj]=np.argmax(correlation_croise)-jj
 
 
 
